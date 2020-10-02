@@ -8,3 +8,15 @@ body{
 .mb-7{
     margin-bottom: 7px;
 }
+
+.mb-5{
+    margin-bottom: 5px !important;
+    
+}
+
+.w-big {
+    width:200px !important;
+}
+.comment-box{
+    display:none;
+}

@@ -7,7 +7,7 @@ from profiles.models import Profile
 # Create your models here.
 class Post(models.Model):
     content = models.TextField()
-    image = models.ImageField(upload_to='posts', validators=[FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif'])], blank=True)
+    image = models.ImageField(upload_to='posts', validators=[FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif', 'mp4'])], blank=True)
     liked = models.ManyToManyField(Profile, blank=True, related_name='likes')
     updated  = models.DateTimeField(auto_now=True)
     created  = models.DateTimeField(auto_now_add=True)
