@@ -35,15 +35,29 @@
                     <form action="{% url 'posts:like-post-view' %}" method="POST" class='like-form' id='{{obj.id}}'>
                         {% csrf_token %}
                         <input type="hidden" name="post_id" value={{obj.id}}>
-                        {% if profile not in obj.liked.all %}
-                            <button type="submit"  style="background-color:white; padding:px; border:1px solid white;"><i class="thumbs up icon" style="color:gray"></i>
+                        
+                            <button type="submit" class="ui button like-btn{{obj.id}}" style="background-color: white;">
+                                {% if profile not in obj.liked.all %}
+                                <i class="thumbs up icon" style="color:gray"></i>
+
+                                Like
+                                {% else %}
+                                <i class="thumbs up icon" style="color:green"></i>
+
+                                 UnLike
+                                {% endif %}
                             </button>
-                            <span> {{obj.num_likes}} likes</span>
-                        {% else %}
-                            <button type="submit" class="" style="background-color:white; padding:px; border:1px solid white;"><i class="thumbs up icon" style="color:green; "></i>
-                            </button>
-                            <span> {{obj.num_likes}} likes</span>
-                        {% endif %}
+                            <div class="ui grid">
+                                <div class="column">
+                                    <div class="like-count{{obj.id}}"> {{obj.num_likes}} </div>
+                                </div>
+                                <div class="column">
+                                    likes
+                                    
+                                </div>
+                            </div>
+                            
+                      
                     </form>
                 </div>
                 <i class="comment icon"></i>
@@ -109,6 +123,42 @@
                     display=false
                 }  
             });
+            $('.like-form').submit(function(e){
+                e.preventDefault()
+                const post_id = $(this).attr('id')
+                const likeText = $(`.like-btn${post_id}`).text()
+                const trim = $.trim(likeText)
+                const url = $(this).attr('action')
+                
+
+                let res;
+                const likes = $(`.like-count${post_id}`).text()
+                const trimCount = parseInt(likes)
+                
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken').val(),
+                        'post_id':post_id,
+                        
+                    },
+                    success: function(response) {
+                        if(trim === 'Unlike') {
+                            $(`.like-btn${post_id}`).text('Like')
+                            res = trimCount - 1
+                        }else {
+                            $(`.like-btn${post_id}`).text('Unlike')
+                            res = trimCount + 1
+
+                        }
+                        $(`.like-count${post_id}`).text(res)          
+                    },
+                    error: function(response) {
+                        console.log('error', response)
+                    },
+                })
+            })
         });
     </script>
 {% endblock scripts %}
